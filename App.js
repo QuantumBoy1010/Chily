@@ -1,20 +1,52 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { 
+  SafeAreaView, 
+  StyleSheet, 
+  Text, 
+  View,
+  Image,
+  TouchableOpacity,
+  Button,
+  FlatList,
+  Modal
+} from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 
+import Home from "./screens/Home";
+import SoundRelaxation from "./screens/SoundRelaxation";
+
+const Stack = createStackNavigator();
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: '#ffffff',
+        justifyContent: 'center',
+      }}
+    >
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false
+          }}
+          initialRouteName={ "Home" }
+        >
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            option={{ title: "Home" }}
+          />
+          <Stack.Screen
+            name="SoundRelaxation"
+            component={SoundRelaxation}
+            option={{ title: "SoundRelaxation" }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>  
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
 });
