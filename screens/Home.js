@@ -1,278 +1,143 @@
-import { Audio } from 'expo-av';
+import {
+	Asset,
+} from 'expo-asset';
+import {
+	Audio,
+	Video,
+	ResizeMode,
+	AVPlaybackSourceObject,
+	AVPlaybackSource,
+} from 'expo-av';
 import React from 'react';
 import {
-   SafeAreaView,
-   StyleSheet,
-   Text,
-   View,
-   Image,
-   ScrollView,
-   ImageBackground,
-   TouchableOpacity,
-   Button,
-   FlatList,
-   Modal
+	SafeAreaView,
+	StyleSheet,
+	Text,
+	View,
+	Image,
+	Dimensions,
+	ScrollView,
+	ImageBackground,
+	TouchableOpacity,
+	Button,
+	FlatList,
+	Modal
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AppIntroSlider from 'react-native-app-intro-slider';
 
-import SoundButton from "../components/SoundButton";
-import { globalColors, screenDimensions } from "../properties/themes";
+import { globalColors, globalFontSizes, screenDimensions } from "../properties/themes";
 import {
-   globalComponentPaddings,
-   globalComponentMargins,
-   globalComponentSizes,
+	globalComponentPaddings,
+	globalComponentMargins,
+	globalComponentSizes,
 } from "../properties/designs"
-import MusicData from "../data/MusicData";
+import relaxationThemes, {Beach, Rain} from "../data/MusicData";
+import MusicThemes from "../data/MusicThemeTypes";
+import SoundRelaxation from "../screens/SoundRelaxation";
 
 
 const Home = () => {
-   const deviceWidth = screenDimensions.windowWidth;
-   const deviceHeight = screenDimensions.windowHeight;
+	const [status, setStatus] = React.useState({});
+	const video = React.useRef(null);
+	const navigator = useNavigation();
 
-   const [sound, setSound] = React.useState();
-
-   async function playSound (soundSource) {
-      console.log("Loading Sound");
-      const { sound } = await Audio.Sound.createAsync(soundSource); //"../assets/audios/counting_star.mp3"
-      setSound(sound);
-
-      console.log('Playing Sound');
-      await sound.playAsync();
-   }
-
-   React.useEffect(() => {
-      return sound
-         ? () => {
-            console.log('Unloading Sound');
-            sound.unloadAsync();
-         }
-         : undefined;
-   }, [sound]);
-
-   const musicData = MusicData;
-   const [currentPlayingFlag, setCurrentPlayingFlag] = React.useState(0);
-   
-   return (
-      <SafeAreaView
-         nativeID="total-screen-view"
-         style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: globalColors.boneWhite,
-            flexDirection: 'column'
-         }}
-      >
-         <ImageBackground
-            source={require("../assets/images/beach.png")}
-            style={{
-               width: '100%',
-               height: '100%',
-            }}
-         >
-         <View
-            nativeID="upper-panel"
-            style={{
-               width: '100%',
-               flex: 2,
-               backgroundColor: globalColors.jadeGreen,
-               opacity: 0.7,
-               borderBottomWidth: 2,
-               borderBottomColor: globalColors.grassGreen,
-            }}
-         >
-
-         </View>
-
-         <View
-            nativeID="main-content"
-            style={{
-               width: '100%',
-               flex: 15,
-               marginTop: 5,
-               alignItems: 'center',
-               justifyContent: 'center',
-               flexDirection: 'column',
-            }}
-         >
-            <View
-               nativeID="playlist-viewer"
-               style={{
-                  flex: 1,
-                  height: '100%',
-                  width: '94%',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: globalColors.white,
-                  borderWidth: 1,
-                  opacity: 0.6,
-                  borderRadius: 10,
-               }}
-            >
-
-            </View>
-            <View
-               nativeID="music-viewer"
-               style={{
-                  flex: 10,
-                  width: '94%',
-                  marginTop: 7,
-                  marginBottom: 7,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: globalColors.skyBlue,
-                  opacity: 0.8,
-                  borderRadius: 14,
-                  flexDirection: (deviceWidth > 500) ? 'row' : 'column',
-               }}
-            >
-               <View
-                  nativeID="category-viewer"
-                  style={{
-                     flex: 1,
-                     marginTop: 4,
-                     marginBottom: 2,
-                     marginLeft: 2,
-                     marginRight: 2,
-                     borderWidth: 1,
-                     borderColor: globalColors.white,
-                     borderRadius: 10,
-                     width: '96%',
-                  }}
-               >
-
-               </View>
-               <View
-                  nativeID="relaxation-music-grid"
-                  style={{
-                     flex: 8,
-                     marginTop: 2,
-                     marginBottom: 2,
-                     marginLeft: 2,
-                     marginRight: 2,
-                     borderWidth: 1,
-                     borderColor: globalColors.white,
-                     borderRadius: 10,
-                     width: '99%',
-                  }}
-               >
-                     <FlatList
-                        style={{
-                           marginTop: 20,
-                        }}
-                        numColumns={3}
-                        key={3}
-                        data={musicData.Rain}
-                        renderItem={({ item }) => {
-                           return (
-                              <View
-                                 style={{
-                                    width: 80,
-                                    height: 80,
-                                    alignSelf: 'center',
-                                    justifyContent: 'center',
-                                    marginLeft: globalComponentMargins.smallMargin,
-                                    marginRight: globalComponentMargins.smallMargin,
-                                    marginBottom: 40,
-                                    opacity: 0.6,
-                                 }}
-                              >
-                                 <TouchableOpacity
-                                    style={{
-                                       width: 80,
-                                       height: 80,
-                                       backgroundColor: globalColors.seashellWhite,
-                                       opacity: 0.6,
-                                       borderRadius: 10,
-                                    }}
-                                    onPress={() => {
-                                       var soundURL = item.source;
-                                       playSound(soundURL);
-                                    }}
-                                 >
-
-                                 </TouchableOpacity>
-                              </View>
-                           );
-                        }}
-                        keyExtractor={item => item.id}
-                     />   
-               </View>
-            </View>
-         </View>
-
-         <View
-            nativeID="lower-panel"
-            style={{
-               width: '100%',
-               flex: 3,
-               backgroundColor: globalColors.grassGreen,
-               opacity: 0.81,
-               borderTopWidth: 1,
-               borderTopColor: globalColors.jadeGreen,
-               flexDirection: 'row',
-               alignItems: 'center',
-               justifyContent: 'center',
-            }}
-         >
-            <View
-               nativeID="music-info-viewer"
-               style={{
-                  flex: 2,
-                  alignContent: 'center',
-                  justifyContent: 'center',
-                  marginLeft: 3,
-                  backgroundColor: globalColors.boneWhite,
-                  height: '70%',
-                  borderRadius: 10,
-               }}
-            >
-
-            </View>
-
-            <View
-               nativeID="play-button"
-               style={{
-                  flex: 1,
-                  alignContent: 'center',
-                  justifyContent: 'center',
-                  marginLeft: 9,
-                  marginRight: 9,
-               }}
-            >
-               <TouchableOpacity
-                  style={{
-                     width: 69,
-                     height: 69,
-                     backgroundColor: globalColors.jadeGreen,
-                     borderRadius: 1000,
-                     alignContent: 'center',
-                  }}
-               >
-                  <Image
-                     source={require("../assets/icons/play_1.png")}
-                     style={{
-                        width: 69,
-                        height: 69,
-                        backgroundColor: globalColors.jadeGreen,
-                        borderRadius: 1000,
-                     }}
-                  />
-               </TouchableOpacity>
-            </View>
-
-            <View
-               nativeID="volume-modifier"
-               style={{
-                  flex: 1,
-               }}
-            >
-
-            </View>
-         </View>
-         </ImageBackground>
-      </SafeAreaView>
-   )
+	return(
+		<SafeAreaView
+			nativeID="total-device-screen-view"
+			style={{
+				width: '100%',
+				height: '100%',
+				alignItems: 'center',
+				justifyContent: 'center',
+			}}
+		>
+			<ImageBackground
+				nativeID="app-wallpaper"
+				source={require("../assets/images/beach.png")}
+				style={{
+					width: '100%',
+					height: '100%',
+					flexDirection: 'column'
+				}}
+			>
+				<View
+					nativeID="app-title"
+					style={{
+						alignSelf: 'center',
+						alignItems: 'center',
+						justifyContent: 'center',
+						width: '50%',
+						flex: 3,
+					}}
+				>
+					<Text
+						style={{
+							color: globalColors.boneWhite,
+							fontSize: 50,
+						}}
+					>Chily</Text>
+				</View>
+				<View
+					nativeID="navigate-relax-screen"
+					style={{
+						alignSelf: 'center',
+						alignItems: 'center',
+						justifyContent: 'center',
+						width: '50%',
+						flex: 2,
+					}}
+				>
+					<TouchableOpacity
+						style={{
+							width: '80%',
+							height: '16%',
+							borderRadius: 25,
+							borderWidth: 1,
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+						onPress={() => {
+							navigator.navigate("SoundRelaxation");
+						}}
+					>
+						<Text
+							style={{
+								color: globalColors.charcoalBlack,
+								fontSize: globalFontSizes.body3,
+							}}
+						>Start Relaxation</Text>
+					</TouchableOpacity>
+				</View>
+			</ImageBackground>
+		</SafeAreaView>
+	)
 };
 
 export default Home;
+
+
+
+/* 
+
+	async function playVideo (videoSource) {
+		console.log("Loading Video");
+		const { video } = await Asset.loadAsync(videoSource); //useAssets(require("../assets/videos/sea_2.mp4"));
+		setVideo(video);
+
+		console.log('Playing Video');
+		await video.shouldPlay();
+	}
+
+			<Video
+				ref={video}
+				style={styles.video}
+				source={{
+					videoURL: require("../assets/videos/sea_2.mp4"),
+				}}
+				useNativeControls
+				resizeMode="contain"
+				isLooping
+				onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+			/>
+*/
