@@ -32,7 +32,7 @@ import {
 	globalComponentMargins,
 	globalComponentSizes,
 } from "../properties/designs"
-import relaxationThemes, {Beach, Rain} from "../data/MusicData";
+import { relaxationThemes, Beach, Rain } from "../data/MusicData";
 import MusicThemes from "../data/MusicThemeTypes";
 import SoundRelaxation from "../screens/SoundRelaxation";
 
@@ -44,7 +44,7 @@ const Home = () => {
 
 	return(
 		<SafeAreaView
-			nativeID="total-device-screen-view"
+			nativeID="device-screen-total-view"
 			style={{
 				width: '100%',
 				height: '100%',
@@ -54,7 +54,7 @@ const Home = () => {
 		>
 			<ImageBackground
 				nativeID="app-wallpaper"
-				source={require("../assets/images/beach.png")}
+				source={require("../assets/images/relax_leaf.png")}
 				style={{
 					width: '100%',
 					height: '100%',
@@ -96,6 +96,9 @@ const Home = () => {
 							borderWidth: 1,
 							alignItems: 'center',
 							justifyContent: 'center',
+							backgroundColor: globalColors.cadmiumGreen,
+							borderColor: globalColors.white,
+							opacity: 0.7,
 						}}
 						onPress={() => {
 							navigator.navigate("SoundRelaxation");
@@ -103,7 +106,7 @@ const Home = () => {
 					>
 						<Text
 							style={{
-								color: globalColors.charcoalBlack,
+								color: globalColors.white,
 								fontSize: globalFontSizes.body3,
 							}}
 						>Start Relaxation</Text>

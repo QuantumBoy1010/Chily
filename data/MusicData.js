@@ -20,7 +20,47 @@ export const Beach = [
 		id: "01",
 		name: "sample_1",
 		source: sample_1,
-	}
+	},
+	{
+		id: "02",
+		name: "sample_2",
+		source: sample_1,
+	},
+	{
+		id: "03",
+		name: "sample_2",
+		source: sample_1,
+	},
+	{
+		id: "04",
+		name: "sample_2",
+		source: sample_1,
+	},
+	{
+		id: "05",
+		name: "sample_2",
+		source: sample_1,
+	},
+	{
+		id: "06",
+		name: "sample_2",
+		source: sample_1,
+	},
+	{
+		id: "07",
+		name: "sample_2",
+		source: sample_1,
+	},
+	{
+		id: "08",
+		name: "sample_2",
+		source: sample_1,
+	},
+	{
+		id: "09",
+		name: "sample_2",
+		source: sample_1,
+	},
 ];
 
 export const Rain = [
@@ -49,9 +89,29 @@ export const Rain = [
 		name: "wind",
 		source: wind,
 	},
+	{
+		id: "06",
+		name: "wind",
+		source: wind,
+	},
+	{
+		id: "07",
+		name: "wind",
+		source: wind,
+	},
+	{
+		id: "08",
+		name: "wind",
+		source: wind,
+	},
+	{
+		id: "09",
+		name: "wind",
+		source: wind,
+	},
 ];
 
-export const Sea = [
+export const Melody = [
 
 ];
 
@@ -63,7 +123,7 @@ export const Ocean = [
 
 ];
 
-export const Material = [
+export const Underwater = [
 
 ];
 
@@ -71,23 +131,15 @@ export const Forest = [
 
 ];
 
-export const Urban = [
-
-];
-
-export const Rural = [
-
-];
-
 export const relaxationThemes = [
 	{
-		themeID: "01",
+		themeID: 1,
 		name: "Rain",
 		theme: Rain,
 		image: require("../assets/images/rain.png"),
 	},
 	{
-		themeID: "02",
+		themeID: 2,
 		name: "Beach & Sea",
 		theme: Beach,
 		image: require("../assets/images/beach.png"),
@@ -98,12 +150,10 @@ export default {
 	relaxationThemes,
 
 	Beach,
-	Sea,
+	Melody,
 	Waterfall,
 	Ocean,
-	Material,
+	Underwater,
 	Forest,
-	Urban,
-	Rural,
 	Rain,
 }

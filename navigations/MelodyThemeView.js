@@ -25,10 +25,10 @@ import {
    globalComponentSizes,
    globalBorderRadiuses,
 } from "../properties/designs";
-import { Beach } from "../data/MusicData";
+import { Melody } from "../data/MusicData";
 
-const BeachThemeView = () => {
-   const themeColor = globalColors.skyBlue;
+const MelodyThemeView = () => {
+   const themeColor = globalColors.lightPurple;
    const soundButtonSize = globalComponentSizes.standardSoundButtonSize;
    const [currentPlayingFlag, setCurrentPlayingFlag] = React.useState(0);
    const [currentSoundSlide, setCurrentSoundSlide] = React.useState(0);
@@ -69,7 +69,7 @@ const BeachThemeView = () => {
                opacity: 0.9,
             }}
             numColumns={3}
-            data={Beach}
+            data={Melody}
             keyExtractor={item => item.id}
             renderItem={({ item }) => {
                return (
@@ -92,7 +92,7 @@ const BeachThemeView = () => {
                            width: soundButtonSize,
                            height: soundButtonSize,
                            backgroundColor: globalColors.seashellWhite,
-                           borderColor: globalColors.limeGreen,
+                           borderColor: globalColors.wisteriaPurple,
                            borderWidth: 1,
                            opacity: 0.6,
                            borderRadius: globalBorderRadiuses.bigBorderRadius,
@@ -100,7 +100,7 @@ const BeachThemeView = () => {
                         onPress={() => {
                            const soundURL = item.source;
                            setCurrentPlayingFlag(item.id);
-                           setCurrentSoundSlide(Beach.themeID);
+                           setCurrentSoundSlide(Melody.themeID);
                            if (item.id === currentPlayingFlag) {
                               playSound(soundURL).then(r => null);
                            }
@@ -113,6 +113,6 @@ const BeachThemeView = () => {
          />
       </View>
    );
-}
+};
 
-export default BeachThemeView;
+export default MelodyThemeView;

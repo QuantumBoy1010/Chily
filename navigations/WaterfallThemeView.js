@@ -25,10 +25,10 @@ import {
    globalComponentSizes,
    globalBorderRadiuses,
 } from "../properties/designs";
-import { Beach } from "../data/MusicData";
+import { Waterfall } from "../data/MusicData";
 
-const BeachThemeView = () => {
-   const themeColor = globalColors.skyBlue;
+const WaterfallThemeView = () => {
+   const themeColor = globalColors.oceanBlue;
    const soundButtonSize = globalComponentSizes.standardSoundButtonSize;
    const [currentPlayingFlag, setCurrentPlayingFlag] = React.useState(0);
    const [currentSoundSlide, setCurrentSoundSlide] = React.useState(0);
@@ -69,7 +69,7 @@ const BeachThemeView = () => {
                opacity: 0.9,
             }}
             numColumns={3}
-            data={Beach}
+            data={Waterfall}
             keyExtractor={item => item.id}
             renderItem={({ item }) => {
                return (
@@ -100,7 +100,7 @@ const BeachThemeView = () => {
                         onPress={() => {
                            const soundURL = item.source;
                            setCurrentPlayingFlag(item.id);
-                           setCurrentSoundSlide(Beach.themeID);
+                           setCurrentSoundSlide(Waterfall.themeID);
                            if (item.id === currentPlayingFlag) {
                               playSound(soundURL).then(r => null);
                            }
@@ -113,6 +113,6 @@ const BeachThemeView = () => {
          />
       </View>
    );
-}
+};
 
-export default BeachThemeView;
+export default WaterfallThemeView;

@@ -41,6 +41,7 @@ export const globalComponentSizes = {
 
     //Buttons
     userSettingButtonSize: 38,
+    standardSoundButtonSize: 75,
 
     //Image preview sizes
     imagePreviewWidth_1: 50,
