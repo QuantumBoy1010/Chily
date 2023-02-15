@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import AppIntroSlider from 'react-native-app-intro-slider';
 
 import SoundButton from "../components/SoundButton";
 import { globalColors, screenDimensions } from "../properties/themes";
@@ -26,6 +25,7 @@ import {
    globalBorderRadiuses,
 } from "../properties/designs";
 import { Beach } from "../data/MusicData";
+import AppProperties, { soundButtonBorderWidth } from '../properties/app_properties';
 
 const BeachThemeView = () => {
    const themeColor = globalColors.skyBlue;
@@ -92,8 +92,8 @@ const BeachThemeView = () => {
                            width: soundButtonSize,
                            height: soundButtonSize,
                            backgroundColor: globalColors.seashellWhite,
-                           borderColor: globalColors.limeGreen,
-                           borderWidth: 1,
+                           borderColor: globalColors.cadmiumGreen,
+                           borderWidth: soundButtonBorderWidth,
                            opacity: 0.6,
                            borderRadius: globalBorderRadiuses.bigBorderRadius,
                         }}

@@ -7,6 +7,7 @@ import { productData,inventoryData } from "./data";
 import administrationLevel from "./administration";
 
 import { globalComponentColors } from "./settings";
+import AppProperties from "./app_properties";
 
 export default {
     Themes,
@@ -16,4 +17,5 @@ export default {
     productData,
     inventoryData,
     administrationLevel,
+    AppProperties,
 }

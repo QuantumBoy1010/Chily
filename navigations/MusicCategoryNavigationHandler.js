@@ -17,7 +17,6 @@ import {
 import 'core-js/features/array/at';
 import { useNavigation } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import AppIntroSlider from 'react-native-app-intro-slider';
 import { NavigationContainer } from '@react-navigation/native';
 
 import SoundButton from "../components/SoundButton";

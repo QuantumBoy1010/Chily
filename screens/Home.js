@@ -24,17 +24,30 @@ import {
 	Modal
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import AppIntroSlider from 'react-native-app-intro-slider';
 
+
+import SoundButton from "../components/SoundButton";
+import PlayListButton from "../components/PlayListButton";
 import { globalColors, globalFontSizes, screenDimensions } from "../properties/themes";
 import {
 	globalComponentPaddings,
 	globalComponentMargins,
 	globalComponentSizes,
-} from "../properties/designs"
-import { relaxationThemes, Beach, Rain } from "../data/MusicData";
+} from "../properties/designs";
+
+import MusicData, { relaxationThemes, Beach, Rain } from "../data/MusicData";
+
+import PlayListElementInfo from "../data/PlayListElementInfoTypes";
 import MusicThemes from "../data/MusicThemeTypes";
-import SoundRelaxation from "../screens/SoundRelaxation";
+
+import CategoryPanel from "../navigations/MusicCategoryNavigationHandler";
+import BeachThemeView from "../navigations/BeachThemeView";
+import RainThemeView from "../navigations/RainThemeView";
+import ForestThemeView from "../navigations/ForestThemeView";
+import MelodyThemeView from "../navigations/MelodyThemeView";
+import UnderwaterThemeView from "../navigations/UnderwaterThemeView";
+import OceanThemeView from "../navigations/OceanThemeView";
+import WaterfallThemeView from "../navigations/WaterfallThemeView";
 
 
 const Home = () => {
@@ -68,15 +81,16 @@ const Home = () => {
 						alignItems: 'center',
 						justifyContent: 'center',
 						width: '50%',
-						flex: 3,
+						flex: 4,
 					}}
 				>
-					<Text
+					<Image
+						source={require("../assets/logo/Chily_2.png")}
 						style={{
-							color: globalColors.boneWhite,
-							fontSize: 50,
+							width: 400,
+							height: 160,
 						}}
-					>Chily</Text>
+					/>
 				</View>
 				<View
 					nativeID="navigate-relax-screen"

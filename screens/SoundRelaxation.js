@@ -11,23 +11,30 @@ import {
 	TouchableOpacity,
 	Button,
 	FlatList,
-	Modal
+	Modal,
+	Animated,
 } from 'react-native';
+import ReactDOM from 'react-dom';
 import 'core-js/features/array/at';
 import { useNavigation } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import AppIntroSlider from 'react-native-app-intro-slider';
+//import { SpectrumVisualizer, SpectrumVisualizerTheme } from 'react-audio-visualizers';
+
 
 import SoundButton from "../components/SoundButton";
+import PlayListButton from "../components/PlayListButton";
 import { globalColors, globalFontSizes, screenDimensions } from "../properties/themes";
 import {
 	globalComponentPaddings,
 	globalComponentMargins,
 	globalComponentSizes,
-} from "../properties/designs"
-import MusicData, {relaxationThemes, Beach, Rain} from "../data/MusicData";
+} from "../properties/designs";
+
+import MusicData, { relaxationThemes, Beach, Rain } from "../data/MusicData";
+
+import PlayListElementInfo from "../data/PlayListElementInfoTypes";
 import MusicThemes from "../data/MusicThemeTypes";
-import musicThemeTypes from "../data/MusicThemeTypes";
+
 import CategoryPanel from "../navigations/MusicCategoryNavigationHandler";
 import BeachThemeView from "../navigations/BeachThemeView";
 import RainThemeView from "../navigations/RainThemeView";
@@ -44,11 +51,13 @@ const SoundRelaxation = () => {
 	const deviceHeight = screenDimensions.windowHeight;
 
 	const [sound, setSound] = React.useState(new Audio.Sound);
+	const [playList, setPlayList] = React.useState([]);
 
 	async function playSound (soundSource) {
 		console.log("Loading Sound");
-		const { sound } = await Audio.Sound.createAsync(soundSource); //"../assets/audios/counting_star.mp3"
+		const { sound } = await Audio.Sound.createAsync(soundSource);
 		setSound(sound);
+		playList.push(sound);
 
 		console.log('Playing Sound');
 		await sound.playAsync();
@@ -68,6 +77,11 @@ const SoundRelaxation = () => {
 
 
 	//Rendering functions
+
+	function touchablePlaylistBarHandle()
+	{
+		
+	}
 
 	/*function renderMusicVolumeControlBar(barWidth,barHeight,controlViewWidth,controlViewHeight,currentPlayingAudio)
 	{
@@ -202,29 +216,31 @@ const SoundRelaxation = () => {
 							nativeID="app-title"
 							style={{
 								flex: 1,
-								marginTop: 4,
-								marginBottom: 2,
-								marginLeft: 2,
-								marginRight: 2,
+								marginTop: 5,
+								marginBottom: 10,
+								marginLeft: 3,
+								marginRight: 3,
 								borderWidth: 1,
 								borderColor: globalColors.white,
 								borderRadius: 20,
-								width: '94%',
+								width: '96%',
 								alignItems: 'center',
 								justifyContent: 'center',
 							}}
 						>
-							<Text
+							<Image
+								source={require("../assets/logo/Chily_2.png")}
 								style={{
-									fontSize: globalFontSizes.h3,
-									color: globalColors.white,
+									width: 200,
+									height: 80,
+									marginTop: 10,
 								}}
-							>Chily</Text>
+							/>
 						</View>
 						<View
 							nativeID="relaxation-music-grid"
 							style={{
-								flex: 8,
+								flex: 7,
 								marginTop: 2,
 								marginBottom: 4,
 								marginLeft: 2,
@@ -309,8 +325,8 @@ const SoundRelaxation = () => {
 						</View>
 					</View>
 
-					<View
-						nativeID="playlist-viewer"
+					<TouchableOpacity
+						nativeID="playlist-bar-viewer"
 						style={{
 							flex: 1,
 							height: '100%',
@@ -321,19 +337,28 @@ const SoundRelaxation = () => {
 							justifyContent: 'center',
 							borderWidth: 1,
 							borderColor: globalColors.white,
-							opacity: 0.5,
+							opacity: 0.6,
 							borderRadius: 25,
 							marginBottom: 2,
 						}}
+						onPress={() => touchablePlaylistBarHandle()}
 					>
 						<FlatList
 							style={{
-
+								height: '100%',
+								width: '100%',
+								borderRadius: 25,
 							}}
-						 	data={null}
-						 	renderItem={null}
-						/>
-					</View>
+							horizontal={true}
+							data={playList}
+							keyExtractor={item => playList.indexOf(item)}
+							renderItem={(item) => {
+								<PlayListButton
+									soundSource={item}
+								/>;
+							}}
+						/>	
+					</TouchableOpacity>
 				</View>
 
 				<View
@@ -341,8 +366,8 @@ const SoundRelaxation = () => {
 					style={{
 						width: '100%',
 						flex: 3,
-						backgroundColor: globalColors.grassGreen,
-						opacity: 0.4,
+						backgroundColor: globalColors.offWhite,
+						opacity: 0.75,
 						borderTopWidth: 1,
 						borderTopColor: globalColors.jadeGreen,
 						flexDirection: 'row',
@@ -351,17 +376,27 @@ const SoundRelaxation = () => {
 					}}
 				>
 					<View
-						nativeID="music-info-viewer"
+						nativeID="media-playlist-info"
 						style={{
-							flex: 2,
+							flex: 3,
 							alignContent: 'center',
 							justifyContent: 'center',
-							marginLeft: 3,
-							backgroundColor: globalColors.boneWhite,
-							height: '70%',
+							marginLeft: 10,
+							backgroundColor: globalColors.onyxBlack,
+							height: '81%',
 							borderRadius: 10,
 						}}
 					>
+						{/*<SpectrumVisualizer
+							audio={sound}
+							theme={SpectrumVisualizerTheme.radialSquaredBars}
+							colors={['#009688', '#26a69a']}
+							iconsColor="#26a69a"
+							backgroundColor="white"
+							showMainActionIcon
+							showLoaderIcon
+							highFrequency={8000}
+						/>*/}
 					</View>
 
 					<View
@@ -370,16 +405,17 @@ const SoundRelaxation = () => {
 							flex: 1,
 							alignContent: 'center',
 							justifyContent: 'center',
-							marginLeft: 9,
-							marginRight: 9,
+							marginLeft: 10,
+							marginRight: 10,
+							borderRadius: 100,
 						}}
 					>
 						<TouchableOpacity
 							style={{
 								width: 69,
 								height: 69,
-								backgroundColor: globalColors.jadeGreen,
-								borderRadius: 1000,
+								backgroundColor: globalColors.white,
+								borderRadius: 100,
 								alignContent: 'center',
 							}}
 						>
@@ -388,20 +424,11 @@ const SoundRelaxation = () => {
 								style={{
 									width: 69,
 									height: 69,
-									backgroundColor: globalColors.jadeGreen,
+									backgroundColor: globalColors.white,
 									borderRadius: 1000,
 								}}
 							/>
 						</TouchableOpacity>
-					</View>
-
-					<View
-						nativeID="volume-modifier"
-						style={{
-							flex: 1,
-						}}
-					>
-						{/*renderMusicVolumeControlBar(60,3,60,10)*/}
 					</View>
 				</View>
 			</ImageBackground>

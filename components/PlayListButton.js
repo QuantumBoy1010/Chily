@@ -18,36 +18,33 @@ import { useNavigation } from '@react-navigation/native';
 
 import { globalColors } from "../properties/themes";
 
-const SoundButton = () => {
-   const [width, setWidth] = React.useState(0);
-   const [height, setHeight] = React.useState(0);
-   const [borderRadius, setBorderRadius] = React.useState(0);
+const PlayListButton = () => {
+   const [soundSource, setSoundSource] = React.useState();
    const [iconSource, setIconSource] = React.useState("");
-   const [mediaSource, setMediaSource] = React.useState("");
-   const [pressAction, setPressAction] = React.useState(null);
+   const [pressAction, setPressAction] = React.useState({});
 
    return (
       <View
          style={{
-            width: width,
-            height: height,
-            borderRadius: borderRadius,
+            width: 40,
+            height: 40,
+            borderRadius: 100,
             justifyContent: 'center',
             alignContent: 'center',
             borderColor: globalColors.alabasterWhite,
+            borderWidth: 1,
          }}
       >
          <TouchableOpacity
             style={{
-               width: width,
-               height: height,
-               borderRadius: borderRadius,
+               width: 40,
+               height: 40,
+               borderRadius: 100,
                justifyContent: 'center',
                alignContent: 'center',
+               opacity: 0.9,
             }}
-            onPress={(mediaSource) => {
-               pressAction;
-            }}
+            onPress={() => pressAction}
          >
             <Image
                source={iconSource}
@@ -57,4 +54,4 @@ const SoundButton = () => {
    );
 };
 
-export default SoundButton;
+export default PlayListButton;

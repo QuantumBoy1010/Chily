@@ -21,7 +21,7 @@ export const globalBorderRadiuses = {
     hugeBorderRadius: 55,
     giganticBorderRadius: 89,
     roundBorderRadius: 100,
-}
+};
 
 export const globalComponentSizes = {
     //Button sizes
@@ -57,7 +57,7 @@ export const globalComponentSizes = {
 
 export const globalAppIconSizes = {
     tabIcon: 10,
-}
+};
 
 export const globalComponentPaddings = {
     noPadding: 0,
@@ -66,7 +66,7 @@ export const globalComponentPaddings = {
     universalPadding: 10,
 
     galleryPadding: 6,
-}
+};
 
 export const globalComponentMargins = {
     noMargin: 0,
@@ -76,7 +76,17 @@ export const globalComponentMargins = {
     bigMargin: 20,
     largeMargin: 35,
     hugeMargin: 53,
-}
+};
+
+export const globalComponentBorderWidths = {
+    noBorder: 0,
+    lightBorderWidth: 1,
+    smallBorderWidth: 2,
+    standardBorderWidth: 3,
+    normalBorderWidth: 4,
+    bigBorderWidth: 6,
+    largeBorderWidth: 10,
+};
 
 export default {
     globalAppIconSizes,
@@ -84,5 +94,6 @@ export default {
     globalComponentPaddings,
     globalComponentSizes,
     globalComponentMargins,
+    globalComponentBorderWidths,
     windowDimensions,
-}
+};

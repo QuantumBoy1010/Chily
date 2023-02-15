@@ -1,4 +1,4 @@
-import {
+import React from "react"; import {
 	View,
 	Text, FlatList, TouchableOpacity,
 } from "react-native";
@@ -7,14 +7,9 @@ import 'core-js/features/array/at';
 import {relaxationThemes} from "../data/MusicData";
 import {globalComponentMargins} from "../properties/designs";
 import {globalColors} from "../properties/themes";
-import AppIntroSlider from "react-native-app-intro-slider";
-import React from "react";
+
 
 const Test = () => {
-	function getElementArrayByAttribute()
-	{
-
-	}
 	console.log(relaxationThemes.at(0).theme.length)
 	/*return (
 		<AppIntroSlider
