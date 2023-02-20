@@ -31,7 +31,7 @@ export default function App() {
 					screenOptions={{
 						headerShown: false
 					}}
-					initialRouteName={ "Home" }
+					initialRouteName={ "SoundRelaxation" }
 				>
 					<Stack.Screen
 						name="Home"

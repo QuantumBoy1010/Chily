@@ -1,5 +1,5 @@
 import { Audio } from 'expo-av';
-import React from 'react';
+import React, {useCallback, useRef, useEffect, useState} from 'react';
 import {
 	SafeAreaView,
 	StyleSheet,
@@ -13,12 +13,20 @@ import {
 	FlatList,
 	Modal,
 	Animated,
+	Transition,
+	Easing,
 } from 'react-native';
-import ReactDOM from 'react-dom';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'core-js/features/array/at';
 import { useNavigation } from '@react-navigation/native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-//import { SpectrumVisualizer, SpectrumVisualizerTheme } from 'react-audio-visualizers';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'; 
+/*import {
+	SharedElement,
+	SharedElementTransition,
+	nodeFromRef,
+	createSharedElementStackNavigator,
+} from 'react-native-shared-element';
+import { SpectrumVisualizer, SpectrumVisualizerTheme } from 'react-audio-visualizers'; */
 
 
 import SoundButton from "../components/SoundButton";
@@ -44,14 +52,15 @@ import UnderwaterThemeView from "../navigations/UnderwaterThemeView";
 import OceanThemeView from "../navigations/OceanThemeView";
 import WaterfallThemeView from "../navigations/WaterfallThemeView";
 
+
 const CategoryTab = createMaterialTopTabNavigator();
 
 const SoundRelaxation = () => {
+	const [playList, setPlayList] = React.useState([]);
 	const deviceWidth = screenDimensions.windowWidth;
 	const deviceHeight = screenDimensions.windowHeight;
 
 	const [sound, setSound] = React.useState(new Audio.Sound);
-	const [playList, setPlayList] = React.useState([]);
 
 	async function playSound (soundSource) {
 		console.log("Loading Sound");
@@ -61,7 +70,7 @@ const SoundRelaxation = () => {
 
 		console.log('Playing Sound');
 		await sound.playAsync();
-	}
+	};
 
 	React.useEffect(() => {
 		return sound
@@ -71,17 +80,28 @@ const SoundRelaxation = () => {
 			: undefined;
 	}, [sound]);
 
-	const musicData = relaxationThemes.filter(object => {
-		return object.theme;
-	});
+	//Component animation params
+	const playlistBarFloatingPositionY = useRef(new Animated.Value(0)).current;
+	const playlistBarFloatingPositionX = useRef(new Animated.Value(0)).current;
+	const playlistBarWidthScaleFactor = useRef(new Animated.Value(0.9)).current;
+
+	//Component state params
+	const [playlistBarFloatingState,setPlaylistBarFloatingState] = React.useState(0);
+
+
+	//Designed themes
+	const auraColor = globalColors.grassGreen;
 
 
 	//Rendering functions
 
-	function touchablePlaylistBarHandle()
-	{
-		
-	}
+	const floatUpward = () => {
+		Animated.timing(globalAnimator,{
+			toValue: 0,
+			duration: 3000,
+			useNativeDriver: false,
+		}).start();
+	};
 
 	/*function renderMusicVolumeControlBar(barWidth,barHeight,controlViewWidth,controlViewHeight,currentPlayingAudio)
 	{
@@ -180,7 +200,7 @@ const SoundRelaxation = () => {
 						backgroundColor: globalColors.jadeGreen,
 						opacity: 0.7,
 						borderBottomWidth: 2,
-						borderBottomColor: globalColors.grassGreen,
+						borderBottomColor: auraColor,
 					}}
 				>
 
@@ -209,6 +229,8 @@ const SoundRelaxation = () => {
 							backgroundColor: globalColors.skyBlue,
 							opacity: 0.81,
 							borderRadius: 16,
+							borderColor: globalColors.grassGreen,
+							borderWidth: 1,
 							flexDirection: (deviceWidth > 500) ? 'row' : 'column',
 						}}
 					>
@@ -222,7 +244,7 @@ const SoundRelaxation = () => {
 								marginRight: 3,
 								borderWidth: 1,
 								borderColor: globalColors.white,
-								borderRadius: 20,
+								borderRadius: 24,
 								width: '96%',
 								alignItems: 'center',
 								justifyContent: 'center',
@@ -324,41 +346,86 @@ const SoundRelaxation = () => {
 							</CategoryTab.Navigator>
 						</View>
 					</View>
-
-					<TouchableOpacity
-						nativeID="playlist-bar-viewer"
-						style={{
-							flex: 1,
-							height: '100%',
-							width: '90%',
-							backgroundColor: globalColors.charcoalBlack,
-							alignItems: 'center',
-							alignSelf: 'center',
-							justifyContent: 'center',
-							borderWidth: 1,
-							borderColor: globalColors.white,
-							opacity: 0.6,
-							borderRadius: 25,
-							marginBottom: 2,
-						}}
-						onPress={() => touchablePlaylistBarHandle()}
-					>
-						<FlatList
-							style={{
+					<Animated.View
+						style={[
+							{
+								flex: 1,
 								height: '100%',
 								width: '100%',
+								marginBottom: 4,
+								alignItems: 'center',
+								justifyContent: 'center',
+							},
+							{
+								transform: [
+									{translateY: playlistBarFloatingPositionY},
+									{scaleX: playlistBarWidthScaleFactor}
+								]
+							},
+						]}
+					>
+						<TouchableOpacity
+							nativeID="playlist-bar-viewer"
+							style={{
+								height: '100%',
+								width: '96%',
+								backgroundColor: globalColors.charcoalBlack,
+								alignItems: 'center',
+								alignSelf: 'center',
+								justifyContent: 'center',
+								borderWidth: 1,
+								borderColor: globalColors.lightGray1,
+								opacity: 0.6,
 								borderRadius: 25,
 							}}
-							horizontal={true}
-							data={playList}
-							keyExtractor={item => playList.indexOf(item)}
-							renderItem={(item) => {
-								<PlayListButton
-									soundSource={item}
-								/>;
+							onPress={() => {
+								if(playlistBarFloatingState % 2 === 0)
+								{
+									Animated.timing(playlistBarFloatingPositionY, {
+										toValue: -565,
+										duration: 1000,
+										useNativeDriver: true,
+									}).start();
+									Animated.timing(playlistBarWidthScaleFactor, {
+										toValue: 1.0,
+										duration: 1000,
+										useNativeDriver: true,
+									}).start();
+									setPlaylistBarFloatingState((playlistBarFloatingState + 1) % 2);
+								}
+								else
+								{
+									Animated.timing(playlistBarFloatingPositionY, {
+										toValue: 0,
+										duration: 1000,
+										useNativeDriver: true,
+									}).start();
+									Animated.timing(playlistBarWidthScaleFactor, {
+										toValue: 0.9,
+										duration: 1000,
+										useNativeDriver: true,
+									}).start();
+									setPlaylistBarFloatingState((playlistBarFloatingState + 1) % 2);
+								}
 							}}
-						/>	
-					</TouchableOpacity>
+						>
+							<FlatList
+								style={{
+									height: '100%',
+									width: '100%',
+									borderRadius: 25,
+								}}
+								horizontal={true}
+								data={playList}
+								keyExtractor={item => playList.indexOf(item)}
+								renderItem={(item) => {
+									<PlayListButton
+										soundSource={item}
+									/>;
+								}}
+							/>
+						</TouchableOpacity>
+					</Animated.View>	
 				</View>
 
 				<View
@@ -366,8 +433,8 @@ const SoundRelaxation = () => {
 					style={{
 						width: '100%',
 						flex: 3,
-						backgroundColor: globalColors.offWhite,
-						opacity: 0.75,
+						backgroundColor: globalColors.black,
+						opacity: 0.81,
 						borderTopWidth: 1,
 						borderTopColor: globalColors.jadeGreen,
 						flexDirection: 'row',
@@ -382,9 +449,11 @@ const SoundRelaxation = () => {
 							alignContent: 'center',
 							justifyContent: 'center',
 							marginLeft: 10,
-							backgroundColor: globalColors.onyxBlack,
+							backgroundColor: globalColors.white,
 							height: '81%',
-							borderRadius: 10,
+							borderRadius: 20,
+							borderColor: auraColor,
+							borderWidth: 1,
 						}}
 					>
 						{/*<SpectrumVisualizer
@@ -414,9 +483,10 @@ const SoundRelaxation = () => {
 							style={{
 								width: 69,
 								height: 69,
-								backgroundColor: globalColors.white,
-								borderRadius: 100,
-								alignContent: 'center',
+								backgroundColor: globalColors.black,
+								borderRadius: 1000,
+								alignItems: 'center',
+								justifyContent: 'center',
 							}}
 						>
 							<Image
@@ -424,8 +494,9 @@ const SoundRelaxation = () => {
 								style={{
 									width: 69,
 									height: 69,
-									backgroundColor: globalColors.white,
+									backgroundColor: globalColors.black,
 									borderRadius: 1000,
+									alignSelf: 'center',
 								}}
 							/>
 						</TouchableOpacity>

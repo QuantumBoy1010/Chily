@@ -1,0 +1,1 @@
+import type { EasingFunction } from 'react-native';

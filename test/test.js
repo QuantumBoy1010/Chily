@@ -1,8 +1,26 @@
-import React from "react"; import {
+import { Audio } from 'expo-av';
+import React, { useCallback, useRef, useEffect, useState } from 'react';
+import {
+	SafeAreaView,
+	StyleSheet,
+	Text,
 	View,
-	Text, FlatList, TouchableOpacity,
-} from "react-native";
+	Image,
+	ScrollView,
+	ImageBackground,
+	TouchableOpacity,
+	Button,
+	FlatList,
+	Modal,
+	Animated,
+	Transition,
+	Easing,
+	SectionList,
+} from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'core-js/features/array/at';
+import { useNavigation } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import {relaxationThemes} from "../data/MusicData";
 import {globalComponentMargins} from "../properties/designs";
@@ -10,82 +28,175 @@ import {globalColors} from "../properties/themes";
 
 
 const Test = () => {
-	console.log(relaxationThemes.at(0).theme.length)
-	/*return (
-		<AppIntroSlider
+	// fadeAnim will be used as the value for opacity. Initial Value: 0
+	/*const fadeAnim = useRef(new Animated.Value(0)).current;
+
+	const fadeIn = () => {
+		// Will change fadeAnim value to 1 in 5 seconds
+		Animated.timing(fadeAnim, {
+			toValue: 1,
+			duration: 5000,
+			useNativeDriver: true,
+		}).start();
+	};
+
+	const fadeOut = () => {
+		// Will change fadeAnim value to 0 in 3 seconds
+		Animated.timing(fadeAnim, {
+			toValue: 0,
+			duration: 3000,
+			useNativeDriver: true,
+		}).start();
+	};*/
+
+
+	const floatAnimator = useRef(new Animated.Value(0)).current;
+	const floatingPosition = useRef(new Animated.Value(0)).current;
+
+	const floatUpward = () => {
+		Animated.timing(floatAnimator, {
+			toValue: floatAnimator.interpolate({
+				inputRange: [0, 1],
+				outputRange: [0, -200],
+			}),
+			duration: 1000,
+			useNativeDriver: true,
+		}).start();
+	}
+
+	/*const float = useEffect(() => {
+			Animated.timing(floatingPosition, {
+				toValue: -200,
+				duration: 1000,
+				useNativeDriver: true,
+			}).start();
+	}, []);*/
+
+
+	return (
+		<SafeAreaView 
 			style={{
-				alignSelf: 'center',
-				width: '90%',
-				height: '90%',
+				flex: 1,
+				alignItems: 'center',
+				justifyContent: 'center',
+				flexDirection: 'column',
 			}}
-			data={musicData}
-			keyExtractor={theme => theme.themeID}
-			renderItem={({theme}) => {
-				//const themeID = musicData.filter(object => object.theme === theme)[0].themeID;
-				console.log(musicData.filter(object => object.theme === theme));
-				return (
-					<View
+		>
+			<Animated.View
+				nativeID="own"
+				style={{
+					borderWidth: 1,
+					width: '90%',
+					height: '50%',
+					borderRadius: 23,
+					alignSelf: 'center',
+					alignItems: 'center',
+					justifyContent: 'center',
+					marginBottom: 2,
+					backgroundColor: '#696969',
+					transform: [{
+						translateY: floatingPosition,
+					}]
+				}}
+			>
+				<TouchableOpacity
+					style={[
+					{
+						width: 200,
+						height: 50,
+						borderWidth: 1,
+						borderRadius: 50,
+						alignItems: 'center',
+						justifyContent: 'center',
+						backgroundColor: '#969696',
+						position: 'absolute',
+					},
+					]}
+					onPress={() => {
+						Animated.timing(floatingPosition, {
+							toValue: -200,
+							duration: 1000,
+							useNativeDriver: true,
+						}).start();
+					}}
+				>
+					<Text
 						style={{
-							width: '100%',
-							height: '100%',
-							alignItems: 'center',
-							justifyContent: 'center',
 						}}
-					>
-						<FlatList
-							style={{
-								alignSelf: 'center',
-							}}
-							numColumns={3}
-							data={musicData.filter(object => object.theme === theme)}
-							keyExtractor={item => item.id}
-							renderItem={({ item }) => {
-								return (
-									<View
-										style={{
-											width: 80,
-											height: 80,
-											alignSelf: 'center',
-											justifyContent: 'center',
-											alignItems: 'center',
-											marginLeft: globalComponentMargins.smallMargin,
-											marginRight: globalComponentMargins.smallMargin,
-											marginBottom: 40,
-											opacity: 0.6,
-										}}
-									>
-										<TouchableOpacity
-											style={{
-												width: 80,
-												height: 80,
-												backgroundColor: globalColors.seashellWhite,
-												borderColor: globalColors.limeGreen,
-												borderWidth: 1,
-												opacity: 0.6,
-												borderRadius: 10,
-											}}
-											onPress={() => {
-												const soundURL = item.source;
-												setCurrentPlayingFlag(item.id);
-												setCurrentSoundSlide(theme.themeID);
-												if(item.id ===  currentPlayingFlag)
-												{
-													playSound(soundURL).then(r => null);
-												}
-											}}
-										>
-										</TouchableOpacity>
-									</View>
-								);
-							}}
-						/>
-					</View>
-				)
-			}}
-			renderDoneButton={null}
-			renderNextButton={null}
-		/>
-	)*/
-}
+					>Coco</Text>
+				</TouchableOpacity>
+			</Animated.View>
+			<TouchableOpacity
+				style={[
+					{
+						width: 200,
+						height: 50,
+						borderWidth: 1,
+						borderRadius: 50,
+						alignItems: 'center',
+						justifyContent: 'center',
+						backgroundColor: '#969696',
+					},
+				]}
+				onPress={() => {
+					Animated.timing(floatingPosition, {
+						toValue: -200,
+						duration: 1000,
+						useNativeDriver: true,
+					}).start();
+				}}
+			>
+				<Text>Coco</Text>
+			</TouchableOpacity>
+		</SafeAreaView>
+	);
+};
+
+const styles = StyleSheet.create({
+	fadingContainer: {
+		padding: 20,
+		backgroundColor: 'powderblue',
+	},
+	fadingText: {
+		fontSize: 28,
+	},
+});
 
 export default Test;
+
+/* 
+
+
+			<Animated.View
+				style={[
+					styles.fadingContainer,
+					{
+						// Bind opacity to animated value
+						opacity: fadeAnim,
+						flex: 1,
+					},
+				]}
+			>
+				<Text 
+					style={styles.fadingText}
+				>Fading View!</Text>
+			</Animated.View>
+			<View
+				style={{
+					flexBasis: 100,
+					justifyContent: 'space-evenly',
+					marginVertical: 16,
+					flex: 1,
+				}}
+			>
+				<Button
+					title="Fade In View"
+					onPress={fadeIn}
+				/>
+				<Button
+					title="Fade Out View"
+					onPress={fadeOut}
+				/>
+			</View>
+
+*/

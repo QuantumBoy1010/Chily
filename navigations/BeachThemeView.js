@@ -85,6 +85,7 @@ const BeachThemeView = () => {
                         marginTop: globalComponentMargins.lightMargin,
                         marginBottom: 40,
                         opacity: 0.6,
+                        borderRadius: globalBorderRadiuses.bigBorderRadius,
                      }}
                   >
                      <TouchableOpacity

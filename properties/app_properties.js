@@ -5,7 +5,7 @@ import { globalColors, } from "./themes";
 
 export const appButtonColor = globalColors.jadeGreen;
 // Border width of sound buttons
-export const soundButtonBorderWidth = globalComponentBorderWidths.normalBorderWidth;
+export const soundButtonBorderWidth = globalComponentBorderWidths.lightBorderWidth;
 
 export const AppProperties = [
    soundButtonBorderWidth, 
