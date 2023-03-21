@@ -1,4 +1,4 @@
-import { Audio } from 'expo-av';
+import * as FileSystem from 'expo-file-system';
 import React, { useCallback, useRef, useEffect, useState } from 'react';
 import {
 	SafeAreaView,
@@ -18,185 +18,104 @@ import {
 	SectionList,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import 'core-js/features/array/at';
 import { useNavigation } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import {relaxationThemes} from "../data/MusicData";
 import {globalComponentMargins} from "../properties/designs";
 import {globalColors} from "../properties/themes";
+import data from "./data.json";
 
 
 const Test = () => {
-	// fadeAnim will be used as the value for opacity. Initial Value: 0
-	/*const fadeAnim = useRef(new Animated.Value(0)).current;
+	/*const fetchedData = require("../test/data.json");
+	console.log("Initial data.json content: " + JSON.stringify(require("./data.json")));
 
-	const fadeIn = () => {
-		// Will change fadeAnim value to 1 in 5 seconds
-		Animated.timing(fadeAnim, {
-			toValue: 1,
-			duration: 5000,
-			useNativeDriver: true,
-		}).start();
+	const dataToPush = {
+		id: "03",
+		name: "person_3",
+		type: "3"
 	};
-
-	const fadeOut = () => {
-		// Will change fadeAnim value to 0 in 3 seconds
-		Animated.timing(fadeAnim, {
-			toValue: 0,
-			duration: 3000,
-			useNativeDriver: true,
-		}).start();
-	};*/
-
-
-	const floatAnimator = useRef(new Animated.Value(0)).current;
-	const floatingPosition = useRef(new Animated.Value(0)).current;
-
-	const floatUpward = () => {
-		Animated.timing(floatAnimator, {
-			toValue: floatAnimator.interpolate({
-				inputRange: [0, 1],
-				outputRange: [0, -200],
+	FileSystem.writeAsStringAsync(data, JSON.stringify(dataToPush))
+		.then(
+			fetchedData.push(dataToPush)
+		)
+		.then(
+			console.log("Final data.json content: " + JSON.stringify(require("./data.json")))
+		)
+		.catch(error => console.log(error));
+	*/
+	const animatedColor = useRef(new Animated.Value(0)).current;
+	var animatedColorInterpolator = animatedColor.interpolate({
+		inputRange: [-1, 0, 1],
+		outputRange: [globalColors.seaBlue, globalColors.grassGreen, globalColors.goldenYellow],
+	});
+	React.useEffect(() => {
+		Animated.loop(
+			Animated.timing(animatedColor, {
+				toValue: animatedColorInterpolator,
+				duration: 200,
+				useNativeDriver: true,
 			}),
-			duration: 1000,
-			useNativeDriver: true,
-		}).start();
-	}
+		).start();	
+	}); 
 
-	/*const float = useEffect(() => {
-			Animated.timing(floatingPosition, {
-				toValue: -200,
+	/*const movingOffset = useRef(new Animated.Value(0)).current;
+	const movingOffsetInterpolator = movingOffset.interpolate({
+		inputRange: [0, 1],
+		outputRange: [-1000, 0],
+	});
+	React.useEffect(() => {
+		Animated.loop(
+			Animated.timing(movingOffset, {
+				toValue: movingOffsetInterpolator,
 				duration: 1000,
 				useNativeDriver: true,
-			}).start();
-	}, []);*/
+			})
+		).start();
+	});*/
+	const AnimatedButton = Animated.createAnimatedComponent(TouchableOpacity);
 
-
-	return (
-		<SafeAreaView 
+	return(
+		<SafeAreaView
 			style={{
-				flex: 1,
+				width: '100%',
+				height: '100%',
 				alignItems: 'center',
 				justifyContent: 'center',
-				flexDirection: 'column',
+				backgroundColor: globalColors.lightPink,
 			}}
 		>
 			<Animated.View
-				nativeID="own"
-				style={{
-					borderWidth: 1,
-					width: '90%',
-					height: '50%',
-					borderRadius: 23,
-					alignSelf: 'center',
-					alignItems: 'center',
-					justifyContent: 'center',
-					marginBottom: 2,
-					backgroundColor: '#696969',
-					transform: [{
-						translateY: floatingPosition,
-					}]
-				}}
-			>
-				<TouchableOpacity
-					style={[
-					{
-						width: 200,
-						height: 50,
-						borderWidth: 1,
-						borderRadius: 50,
-						alignItems: 'center',
-						justifyContent: 'center',
-						backgroundColor: '#969696',
-						position: 'absolute',
-					},
-					]}
-					onPress={() => {
-						Animated.timing(floatingPosition, {
-							toValue: -200,
-							duration: 1000,
-							useNativeDriver: true,
-						}).start();
-					}}
-				>
-					<Text
-						style={{
-						}}
-					>Coco</Text>
-				</TouchableOpacity>
-			</Animated.View>
-			<TouchableOpacity
 				style={[
 					{
 						width: 200,
-						height: 50,
-						borderWidth: 1,
-						borderRadius: 50,
+						height: 60,
 						alignItems: 'center',
 						justifyContent: 'center',
-						backgroundColor: '#969696',
-					},
+						borderRadius: 25,
+						borderColor: globalColors.black,
+						backgroundColor: animatedColor,
+					}
 				]}
-				onPress={() => {
-					Animated.timing(floatingPosition, {
-						toValue: -200,
-						duration: 1000,
-						useNativeDriver: true,
-					}).start();
-				}}
 			>
-				<Text>Coco</Text>
-			</TouchableOpacity>
+				<AnimatedButton
+					style={[
+						{
+							width: 200,
+							height: 60,
+							borderWidth: 1,
+							borderRadius: 25,
+							alignItems: 'center',
+							justifyContent: 'center',
+						}
+					]}
+				>
+					<Text>Meditation</Text>
+				</AnimatedButton>
+			</Animated.View>
 		</SafeAreaView>
-	);
+	)
 };
 
-const styles = StyleSheet.create({
-	fadingContainer: {
-		padding: 20,
-		backgroundColor: 'powderblue',
-	},
-	fadingText: {
-		fontSize: 28,
-	},
-});
-
 export default Test;
-
-/* 
-
-
-			<Animated.View
-				style={[
-					styles.fadingContainer,
-					{
-						// Bind opacity to animated value
-						opacity: fadeAnim,
-						flex: 1,
-					},
-				]}
-			>
-				<Text 
-					style={styles.fadingText}
-				>Fading View!</Text>
-			</Animated.View>
-			<View
-				style={{
-					flexBasis: 100,
-					justifyContent: 'space-evenly',
-					marginVertical: 16,
-					flex: 1,
-				}}
-			>
-				<Button
-					title="Fade In View"
-					onPress={fadeIn}
-				/>
-				<Button
-					title="Fade Out View"
-					onPress={fadeOut}
-				/>
-			</View>
-
-*/

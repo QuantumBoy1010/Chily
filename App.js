@@ -4,16 +4,23 @@ import {
 	Text,
 	View,
 	Image,
+	ScrollView,
+	ImageBackground,
 	TouchableOpacity,
 	Button,
 	FlatList,
-	Modal
+	Modal,
+	Animated,
+	Transition,
+	Easing,
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
 import Home from "./screens/Home";
 import SoundRelaxation from "./screens/SoundRelaxation";
+import RelaxationDetail from "./screens/RelaxationDetail";
+
 import Test from "./test/test.js";
 
 const Stack = createStackNavigator();
@@ -31,7 +38,7 @@ export default function App() {
 					screenOptions={{
 						headerShown: false
 					}}
-					initialRouteName={ "SoundRelaxation" }
+					initialRouteName={ "Test" }
 				>
 					<Stack.Screen
 						name="Home"
@@ -43,7 +50,11 @@ export default function App() {
 						component={SoundRelaxation}
 						option={{ title: "SoundRelaxation" }}
 					/>
-
+					<Stack.Screen
+						name="RelaxationDetail"
+						component={RelaxationDetail}
+						option={{ title: "RelaxationDetail" }}
+					/>
 
 					<Stack.Screen
 						name="Test"

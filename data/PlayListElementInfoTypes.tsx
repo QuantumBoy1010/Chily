@@ -1,6 +1,7 @@
 type PlayListElementInfo = { 
-   id: number, 
-   sound: object,
+   playlistID: string,
+   relaxationType: string,
+   soundID: string,
 };
 
 export default PlayListElementInfo;

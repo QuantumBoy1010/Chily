@@ -39,6 +39,7 @@ import {
 } from "../properties/designs";
 
 import MusicData, { relaxationThemes, Beach, Rain } from "../data/MusicData";
+import PlayListData, { playlist } from "../data/PlayListData";
 
 import PlayListElementInfo from "../data/PlayListElementInfoTypes";
 import MusicThemes from "../data/MusicThemeTypes";
@@ -56,53 +57,32 @@ import WaterfallThemeView from "../navigations/WaterfallThemeView";
 const CategoryTab = createMaterialTopTabNavigator();
 
 const SoundRelaxation = () => {
-	const [playList, setPlayList] = React.useState([]);
+	
+	const navigator = useNavigation();
+	//Screen specification
 	const deviceWidth = screenDimensions.windowWidth;
 	const deviceHeight = screenDimensions.windowHeight;
 
 	const [sound, setSound] = React.useState(new Audio.Sound);
 
-	async function playSound (soundSource) {
-		console.log("Loading Sound");
-		const { sound } = await Audio.Sound.createAsync(soundSource);
-		setSound(sound);
-		playList.push(sound);
-
-		console.log('Playing Sound');
-		await sound.playAsync();
-	};
-
-	React.useEffect(() => {
-		return sound
-			? () => {
-				sound.unloadAsync().then(r => null);
-			}
-			: undefined;
-	}, [sound]);
-
 	//Component animation params
 	const playlistBarFloatingPositionY = useRef(new Animated.Value(0)).current;
 	const playlistBarFloatingPositionX = useRef(new Animated.Value(0)).current;
 	const playlistBarWidthScaleFactor = useRef(new Animated.Value(0.9)).current;
+	const [playlistBarCurrentCoordinateX,setPlaylistBarCurrentCoordinateX] = React.useState(0);
+	const [playlistBarCurrentCoordinateY, setPlaylistBarCurrentCoordinateY] = React.useState(0);
+
+	//Referenced components
+	const playlistBarViewer = useRef([playlistBarCurrentCoordinateX, playlistBarCurrentCoordinateY]).current;
 
 	//Component state params
-	const [playlistBarFloatingState,setPlaylistBarFloatingState] = React.useState(0);
-
+	const [playlistBarFloatingState, setPlaylistBarFloatingState] = React.useState(0);
 
 	//Designed themes
 	const auraColor = globalColors.grassGreen;
 
 
 	//Rendering functions
-
-	const floatUpward = () => {
-		Animated.timing(globalAnimator,{
-			toValue: 0,
-			duration: 3000,
-			useNativeDriver: false,
-		}).start();
-	};
-
 	/*function renderMusicVolumeControlBar(barWidth,barHeight,controlViewWidth,controlViewHeight,currentPlayingAudio)
 	{
 		const smallestVolume = 0;
@@ -244,8 +224,8 @@ const SoundRelaxation = () => {
 								marginRight: 3,
 								borderWidth: 1,
 								borderColor: globalColors.white,
-								borderRadius: 24,
-								width: '96%',
+								borderRadius: 27,
+								width: '90%',
 								alignItems: 'center',
 								justifyContent: 'center',
 							}}
@@ -346,7 +326,15 @@ const SoundRelaxation = () => {
 							</CategoryTab.Navigator>
 						</View>
 					</View>
+
 					<Animated.View
+						nativeID="playlist-bar-viewer"
+						ref={(playlistBarViewer) => {
+							playlistBarViewer.measureInWindow((x, y) => {
+								setPlaylistBarCurrentCoordinateX(x);
+								setPlaylistBarCurrentCoordinateY(y);
+							});
+						}}
 						style={[
 							{
 								flex: 1,
@@ -358,14 +346,19 @@ const SoundRelaxation = () => {
 							},
 							{
 								transform: [
-									{translateY: playlistBarFloatingPositionY},
-									{scaleX: playlistBarWidthScaleFactor}
+									{ translateY: playlistBarFloatingPositionY },
+									{ scaleX: playlistBarWidthScaleFactor }
 								]
 							},
 						]}
+					/*onLayout={(nativeEvent) => {
+						setPlaylistBarCurrentCoordinateX(nativeEvent.layout.x);
+						setPlaylistBarCurrentCoordinateY(nativeEvent.layout.y);
+						playlistBarViewer = [playlistBarCurrentCoordinateX, playlistBarCurrentCoordinateY];
+					}}*/
 					>
 						<TouchableOpacity
-							nativeID="playlist-bar-viewer"
+							nativeID="playlist-bar"
 							style={{
 								height: '100%',
 								width: '96%',
@@ -379,10 +372,10 @@ const SoundRelaxation = () => {
 								borderRadius: 25,
 							}}
 							onPress={() => {
-								if(playlistBarFloatingState % 2 === 0)
-								{
+								if (playlistBarFloatingState % 2 === 0) {
+									let floatingOffset = -565 / 760 * deviceHeight;
 									Animated.timing(playlistBarFloatingPositionY, {
-										toValue: -565,
+										toValue: floatingOffset,
 										duration: 1000,
 										useNativeDriver: true,
 									}).start();
@@ -392,9 +385,9 @@ const SoundRelaxation = () => {
 										useNativeDriver: true,
 									}).start();
 									setPlaylistBarFloatingState((playlistBarFloatingState + 1) % 2);
+									navigator.navigate("RelaxationDetail");
 								}
-								else
-								{
+								else {
 									Animated.timing(playlistBarFloatingPositionY, {
 										toValue: 0,
 										duration: 1000,
@@ -406,6 +399,11 @@ const SoundRelaxation = () => {
 										useNativeDriver: true,
 									}).start();
 									setPlaylistBarFloatingState((playlistBarFloatingState + 1) % 2);
+
+
+									/*console.log(playlistBarCurrentCoordinateX);
+									console.log(playlistBarCurrentCoordinateY);
+									console.log(deviceHeight);*/
 								}
 							}}
 						>
@@ -416,8 +414,8 @@ const SoundRelaxation = () => {
 									borderRadius: 25,
 								}}
 								horizontal={true}
-								data={playList}
-								keyExtractor={item => playList.indexOf(item)}
+								data={playlist}
+								keyExtractor={item => playlist.indexOf(item)}
 								renderItem={(item) => {
 									<PlayListButton
 										soundSource={item}
@@ -425,7 +423,7 @@ const SoundRelaxation = () => {
 								}}
 							/>
 						</TouchableOpacity>
-					</Animated.View>	
+					</Animated.View>
 				</View>
 
 				<View

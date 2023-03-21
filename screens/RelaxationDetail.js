@@ -1,30 +1,36 @@
 import { Audio } from 'expo-av';
 import React from 'react';
 import {
-   SafeAreaView,
-   StyleSheet,
-   Text,
-   View,
-   Image,
-   ScrollView,
-   ImageBackground,
-   TouchableOpacity,
-   Button,
-   FlatList,
-   Modal
+	SafeAreaView,
+	StyleSheet,
+	Text,
+	View,
+	Image,
+	ScrollView,
+	ImageBackground,
+	TouchableOpacity,
+	Button,
+	FlatList,
+	Modal,
+	Animated,
+	Transition,
+	Easing,
 } from 'react-native';
 import 'core-js/features/array/at';
 import { useNavigation } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import SoundButton from "../components/SoundButton";
 import { globalColors, globalFontSizes, screenDimensions } from "../properties/themes";
 import {
-   globalComponentPaddings,
-   globalComponentMargins,
-   globalComponentSizes,
+	globalComponentPaddings,
+	globalComponentMargins,
+	globalComponentSizes,
 } from "../properties/designs";
-import { playList } from "./SoundRelaxation";
+import PlayListButton from "../components/PlayListButton";
+import PlayListData, { playList } from "../data/PlayListData";
+import { playlistBarFloatingState, setPlaylistBarFloatingState } from "./SoundRelaxation";
 
 import MusicData, {relaxationThemes} from "../data/MusicData";
 import MusicThemes from "../data/MusicThemeTypes";
@@ -38,21 +44,122 @@ import UnderwaterThemeView from "../navigations/UnderwaterThemeView";
 import OceanThemeView from "../navigations/OceanThemeView";
 import WaterfallThemeView from "../navigations/WaterfallThemeView";
 
+
 const RelaxationDetail = () => {
-   const [playListQueue, setPlayListQueue] = React.useState(playList);
-   return (
-      <SafeAreaView
-         nativeID="relaxation-total-detail"
-         style={{
-            width: '100%',
-            height: '90%',
-            alignItems: 'center',
-            justifyContent: 'center',
-         }}
-      >
-         
-      </SafeAreaView>
-   );
+	const navigator = useNavigation();
+
+	const [playlistBarFloatingState, setPlaylistBarFloatingState] = React.useState(playlistBarFloatingState);
+
+	return (
+		<SafeAreaView
+			nativeID="relaxation-total-detail"
+			style={{
+				width: '100%',
+				height: '100%',
+				alignItems: 'center',
+				justifyContent: 'center',
+			}}
+		>
+			<ImageBackground
+				source={require("../assets/images/relaxation_3.png")}
+				style={{
+					width: '100%',
+					height: '100%',
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
+			>
+				<View
+					style={{
+						width: '100%',
+						height: '93%',
+						alignSelf: 'center',
+						alignItems: 'center',
+						justifyContent: 'center',
+						flexDirection: 'column',
+						borderWidth: 1,
+						borderRadius: 30,
+						backgroundColor: globalColors.charcoalBlack,
+						opacity: 0.86,
+					}}
+				>
+					<Animated.View
+						nativeID="playlist-bar-viewer"
+						ref={(playlistBarViewer) => {
+						}}
+						style={[
+							{
+								flex: 1,
+								height: '100%',
+								width: '100%',
+								marginBottom: 4,
+								alignItems: 'center',
+								justifyContent: 'center',
+							},
+						]}
+					>
+						<TouchableOpacity
+							nativeID="playlist-bar"
+							style={{
+								height: '100%',
+								width: '100%',
+								backgroundColor: globalColors.black,
+								alignItems: 'center',
+								alignSelf: 'center',
+								justifyContent: 'center',
+								borderColor: globalColors.lightGray1,
+								borderRadius: 1000,
+							}}
+							onPress={(playlistBarFloatingState) => {
+								setPlaylistBarFloatingState((playlistBarFloatingState + 1) % 2);
+								navigator.goBack();
+							}}
+						>
+							<FlatList
+								style={{
+									height: '100%',
+									width: '100%',
+									borderRadius: 25,
+								}}
+								horizontal={true}
+								data={playList}
+								keyExtractor={item => playList.indexOf(item)}
+								renderItem={(item) => {
+									<PlayListButton
+										soundSource={item}
+									/>;
+								}}
+							/>
+						</TouchableOpacity>
+					</Animated.View>
+
+					<View
+						nativeID="music-detailed-swipeable-list"
+						style={{
+							flex: 12,
+							width: '100%',
+							borderBottomLeftRadius: 25,
+							borderBottomRightRadius: 25,
+						}}
+					>
+						<FlatList
+							style={{
+								height: '100%',
+								width: '90%',
+							}}
+							data={playList}
+							keyExtractor={item => playList.indexOf(item)}
+							renderItem={(item) => {
+								<Swipeable>
+									<Text></Text>
+								</Swipeable>;
+							}}
+						/>
+					</View>
+				</View>
+			</ImageBackground>
+		</SafeAreaView>
+	);
 };
 
 export default RelaxationDetail;
